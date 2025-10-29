@@ -1,0 +1,30 @@
+name: Agendamento Reviews Feira
+
+on:
+  schedule:
+    # Executa a cada 5 minutos
+    - cron: "*/5 * * * *"
+  workflow_dispatch:  # permite rodar manualmente também
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Executar script Python
+        run: python app.py
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          API_PASSWD: ${{ secrets.API_PASSWD }}
